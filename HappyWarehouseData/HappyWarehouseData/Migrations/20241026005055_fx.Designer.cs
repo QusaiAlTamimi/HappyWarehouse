@@ -3,6 +3,7 @@ using System;
 using HappyWarehouseData.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HappyWarehouseData.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241026005055_fx")]
+    partial class fx
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.35");
@@ -111,6 +113,9 @@ namespace HappyWarehouseData.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("WarehouseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ss")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
