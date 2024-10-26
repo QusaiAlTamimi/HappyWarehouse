@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HappyWarehouseCore.Dtos;
 using HappyWarehouseService.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HappyItemAPI.Controllers
 {
-
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -45,7 +46,7 @@ namespace HappyItemAPI.Controllers
 
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequestModel model)
         {
