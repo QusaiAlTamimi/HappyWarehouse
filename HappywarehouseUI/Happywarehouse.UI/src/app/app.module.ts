@@ -12,6 +12,7 @@ import { PanelLayoutComponent } from './core/layout/panel-layout/panel-layout.co
 import { AppComponent } from './app.component';
 import { GlobalInterceptor } from './core/services/global.interceptor';
 import { WerahousesComponent } from './site/panel/werahouses/werahouses.component';
+import { ItemsComponent } from './site/panel/items/items.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { WerahousesComponent } from './site/panel/werahouses/werahouses.componen
     AuthLayoutComponent,
     PanelLayoutComponent,
     WerahousesComponent,
+    ItemsComponent,
   ],
   imports: [
     BrowserModule,

@@ -19,24 +19,24 @@ export class itemService {
     return this.http.get<item[]>(`${environment.apiUrl}/${this.url}/GetById?id=${item.id}`);
   }
 
-  public update(item: item): Observable<item[]> {
-    return this.http.put<item[]>(
+  public update(item: item): Observable<item> {
+    return this.http.put<item>(
       `${environment.apiUrl}/${this.url}/Update`,
       item
     );
   }
 
-  public create(item: item): Observable<item[]> {
+  public create(item: item): Observable<item> {
     debugger
-    return this.http.post<item[]>(
+    return this.http.post<item>(
       `${environment.apiUrl}/${this.url}/Create`,
       item
     );
   }
 
-  public delete(item: item): Observable<item[]> {
-    return this.http.delete<item[]>(
-      `${environment.apiUrl}/${this.url}/Delete?id=${item.id}`
+  public delete(id: number): Observable<item> {
+    return this.http.delete<item>(
+      `${environment.apiUrl}/${this.url}/Delete?id=${id}`
     );
   }
 }

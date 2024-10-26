@@ -1,0 +1,69 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between">
+    <h2>Items</h2>
+
+  <!-- Button to show the form -->
+  <button class="btn btn-primary mb-3" (click)="showItemForm = !showItemForm">
+    {{ showItemForm ? 'Cancel' : (newItem.id === 0 ? 'Create New Item' : 'Edit Item') }}
+  </button>
+</div>
+  <!-- Hidden form for creating or editing an item -->
+  <form *ngIf="showItemForm" (ngSubmit)="createItem()">
+    <div class="form-group mb-2">
+      <label for="name">Name</label>
+      <input type="text" id="name" class="form-control" [(ngModel)]="newItem.name" name="name" required />
+    </div>
+    <div class="form-group mb-2">
+      <label for="sKUCode">SKU Code</label>
+      <input type="text" id="sKUCode" class="form-control" [(ngModel)]="newItem.skuCode" name="skuCode" required />
+    </div>
+    <div class="form-group mb-2">
+      <label for="Qty">Quantity</label>
+      <input type="number" id="Qty" class="form-control" [(ngModel)]="newItem.qty" name="qty" required />
+    </div>
+    <div class="form-group mb-2">
+      <label for="CostPrice">Cost Price</label>
+      <input type="number" id="CostPrice" class="form-control" [(ngModel)]="newItem.costPrice" name="costPrice" required />
+    </div>
+    <div class="form-group mb-2">
+      <label for="MSRPPrice">MSRP Price</label>
+      <input type="number" id="MSRPPrice" class="form-control" [(ngModel)]="newItem.msrpPrice" name="msrpPrice" required />
+    </div>
+    <div class="form-group mb-2">
+      <label for="WarehouseId">Warehouse ID</label>
+      <input type="number" id="WarehouseId" class="form-control" [(ngModel)]="newItem.warehouseId" name="warehouseId" required />
+    </div>
+    <button type="submit" style="display: block;justify-self: center;margin: 30px;" class="btn btn-success">{{ newItem.id === 0 ? 'Create' : 'Update' }}</button>
+  </form>
+
+  <!-- Items Table -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>SKU Code</th>
+        <th>Quantity</th>
+        <th>Cost Price</th>
+        <th>MSRP Price</th>
+        <th>Warehouse ID</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.skuCode }}</td>
+        <td>{{ item.qty }}</td>
+        <td>{{ item.costPrice }}</td>
+        <td>{{ item.msrpPrice }}</td>
+        <td>{{ item.warehouseId }}</td>
+        <td class="d-flex justify-content-around">
+          <button class="btn btn-warning btn-sm" (click)="editItem(item)">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteItem(item.id!)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

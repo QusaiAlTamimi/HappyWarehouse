@@ -1,11 +1,13 @@
 <div class="container mt-4">
+  <div class="d-flex justify-content-between">
+
   <h2>Warehouses</h2>
 
   <!-- Button to show the form -->
   <button class="btn btn-primary mb-3" (click)="showForm = !showForm">
     {{ showForm ? 'Cancel' : (newWarehouse.id === 0 ? 'Create New Warehouse' : 'Edit Warehouse') }}
   </button>
-
+</div>
   <!-- Hidden form for creating or editing a warehouse -->
   <form *ngIf="showForm" (ngSubmit)="createWarehouse()">
     <div class="form-group mb-2">
@@ -24,7 +26,7 @@
       <label for="country">Country</label>
       <input type="text" id="country" class="form-control" [(ngModel)]="newWarehouse.country" name="country" required />
     </div>
-    <button type="submit" class="btn btn-success">{{ newWarehouse.id === 0 ? 'Create' : 'Update' }}</button>
+    <button type="submit" style="display: block;justify-self: center;margin: 30px;" class="btn btn-success">{{ newWarehouse.id === 0 ? 'Create' : 'Update' }}</button>
   </form>
 
   <!-- Warehouse Table -->
@@ -48,7 +50,7 @@
         <td>{{ warehouse.city }}</td>
         <td>{{ warehouse.country }}</td>
         <td>{{ warehouse.items.length }}</td>
-        <td>
+        <td class="d-flex justify-content-around">
           <button class="btn btn-warning btn-sm" (click)="editWarehouse(warehouse)">Edit</button>
           <button class="btn btn-danger btn-sm" (click)="deleteWarehouse(warehouse.id!)">Delete</button>
         </td>
