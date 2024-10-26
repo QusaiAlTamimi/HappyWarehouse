@@ -1,8 +1,7 @@
 export class warehouse {
   id?:number;
-  address = "";
   name = "";
+  address = "";
   city = "";
   country?:number;
-  //items:any;
 }
