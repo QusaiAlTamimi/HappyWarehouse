@@ -1,7 +1,8 @@
-using HappyWarehouseAPI.Data;
-using HappyWarehouseAPI.Helpers;
-using HappyWarehouseAPI.Models;
-using HappyWarehouseAPI.Services;
+using HappyWarehouseCore.Dtos;
+using HappyWarehouseCore.Models;
+using HappyWarehouseData.DataAccess;
+using HappyWarehouseService.IServices;
+using HappyWarehouseService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,6 @@ builder.Services.AddControllers()
       });
 
 // Register services
-builder.Services.AddSingleton<JwtTokenService>(); // Ensure JwtTokenService is properly implemented
 builder.Services.Configure<JWT>(configuration.GetSection("JWT")); // Use 'configuration' variable
 
 // Configure Identity
@@ -40,6 +40,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 // Register AuthService
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });

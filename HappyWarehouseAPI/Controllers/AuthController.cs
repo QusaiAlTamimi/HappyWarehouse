@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using HappyWarehouseAPI.Models;
-using HappyWarehouseAPI.Services;
+using HappyWarehouseCore.Dtos;
+using HappyWarehouseService.IServices;
 
 namespace HappyItemAPI.Controllers
 {

@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Linq;
-using HappyWarehouseAPI.Data;
-using HappyWarehouseAPI.Models;
+﻿using HappyWarehouseCore.Models;
+using Microsoft.AspNetCore.Mvc;
+using HappyWarehouseService.IServices;
 
 namespace HappyItemAPI.Controllers
 {
@@ -11,125 +8,67 @@ namespace HappyItemAPI.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IItemService _itemService;
 
-        public ItemsController(DataContext context)
+        public ItemsController(IItemService itemService)
         {
-            _context = context;
+            _itemService = itemService;
         }
 
         // GET: api/Items
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _context.Items.ToListAsync());
+            var items = await _itemService.GetAllItemsAsync();
+            return Ok(items);
         }
 
         // GET: api/Items/5
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById(int? id)
         {
-            if (id == null || _context.Items == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var Item = await _context.Items.FirstOrDefaultAsync(m => m.Id == id);
-            if (Item == null)
-            {
-                return NotFound();
-            }
+            var item = await _itemService.GetItemByIdAsync(id.Value);
+            if (item == null) return NotFound();
 
-            return Ok(Item);
+            return Ok(item);
         }
 
         // POST: api/Items
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([Bind("Id,Email,FullName,Role,Active")] Item Item)
+        public async Task<IActionResult> Create(Item item)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(Item);
-                    await _context.SaveChangesAsync();
-                    return Ok(Item);
-                }
-                else
-                    return BadRequest();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            if (!ModelState.IsValid) return BadRequest();
+
+            var createdItem = await _itemService.CreateItemAsync(item);
+            if (createdItem == null) return BadRequest("Failed to create item.");
+
+            return Ok(createdItem);
         }
 
         // PUT: api/Items/5
         [HttpPut("Update")]
-        public async Task<IActionResult> Update(int id, [Bind("Id,Email,FullName,Role,Active")] Item Item)
+        public async Task<IActionResult> Update(Item item)
         {
-            if (id != Item.Id)
-            {
-                return BadRequest("Item ID mismatch.");
-            }
+            if (!ModelState.IsValid || item.Id == 0) return BadRequest("Item ID mismatch or invalid data.");
 
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    _context.Update(Item);
-                    await _context.SaveChangesAsync();
-                    return Ok(Item);
-                }
-                return BadRequest();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemExists(Item.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            var updatedItem = await _itemService.UpdateItemAsync(item.Id, item);
+            if (updatedItem == null) return NotFound();
+
+            return Ok(updatedItem);
         }
 
         // DELETE: api/Items/5
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                if (id == 0)
-                {
-                    return BadRequest("Invalid Item ID.");
-                }
+            if (id == 0) return BadRequest("Invalid Item ID.");
 
-                var Item = await _context.Items.FindAsync(id);
-                if (Item == null)
-                {
-                    return NotFound();
-                }
+            var deletedItem = await _itemService.DeleteItemAsync(id);
+            if (deletedItem == null) return NotFound();
 
-                _context.Items.Remove(Item);
-                await _context.SaveChangesAsync();
-                return Ok(Item);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        private bool ItemExists(int id)
-        {
-            return _context.Items.Any(e => e.Id == id);
+            return Ok(deletedItem);
         }
     }
 }
