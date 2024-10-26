@@ -94,6 +94,15 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"])) // Use 'configuration' variable
     };
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "HappyWarehouseOrigins", policy =>
+    {
+        policy.WithOrigins("https://localhost:44343", "http://localhost:4200")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -103,7 +112,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("HappyWarehouseOrigins");
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Make sure authentication middleware is registered
 app.UseAuthorization();

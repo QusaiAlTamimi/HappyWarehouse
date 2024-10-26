@@ -7,7 +7,7 @@ using HappyWarehouseService.IServices;
 
 namespace HappyWarehouseAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]/")]
     [ApiController]
     public class WarehousesController : ControllerBase
