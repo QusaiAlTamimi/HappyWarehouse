@@ -19,24 +19,23 @@ export class WarehouseService {
     return this.http.get<warehouse[]>(`${environment.apiUrl}/${this.url}/GetById/${warehouse.id}`);
   }
 
-  public update(warehouse: warehouse): Observable<warehouse[]> {
-    return this.http.put<warehouse[]>(
-      `${environment.apiUrl}/${this.url}/Update`,
+  public update(warehouse: warehouse): Observable<warehouse> {
+    return this.http.put<warehouse>(
+      `${environment.apiUrl}/${this.url}/Update/`,
       warehouse
     );
   }
 
-  public create(warehouse: warehouse): Observable<warehouse[]> {
-    debugger
-    return this.http.post<warehouse[]>(
+  public create(warehouse: warehouse): Observable<warehouse> {
+    return this.http.post<warehouse>(
       `${environment.apiUrl}/${this.url}/Create`,
       warehouse
     );
   }
 
-  public delete(warehouse: warehouse): Observable<warehouse[]> {
-    return this.http.delete<warehouse[]>(
-      `${environment.apiUrl}/${this.url}/Delete?id=${warehouse.id}`
+  public delete(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${environment.apiUrl}/${this.url}/Delete?id=${id}`
     );
   }
 }
