@@ -1,9 +1,11 @@
 ﻿using HappyWarehouseCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using HappyWarehouseService.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HappyItemAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/")]
     [ApiController]
     public class ItemsController : ControllerBase

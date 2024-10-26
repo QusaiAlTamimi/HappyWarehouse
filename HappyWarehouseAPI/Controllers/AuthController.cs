@@ -4,6 +4,7 @@ using HappyWarehouseService.IServices;
 
 namespace HappyItemAPI.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -31,7 +32,7 @@ namespace HappyItemAPI.Controllers
             return Ok(user); // Return user details
         }
 
-        [HttpPost("Register")]
+        [HttpPost("Create")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel model)
         {
             if (!ModelState.IsValid)
@@ -45,7 +46,7 @@ namespace HappyItemAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPost("GetToken")]
+        [HttpPost("Login")]
         public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequestModel model)
         {
             if (!ModelState.IsValid)
