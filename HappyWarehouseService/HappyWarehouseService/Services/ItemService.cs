@@ -5,65 +5,64 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HappyWarehouseService.Services
 {
-    public class WarehouseService : IWarehouseService
+    public class ItemService : IItemService
     {
         private readonly DataContext _context;
 
-        public WarehouseService(DataContext context)
+        public ItemService(DataContext context)
         {
             _context = context;
         }
 
-        public async Task<List<Warehouse>> GetAllWarehousesAsync()
+        public async Task<List<Item>> GetAllItemsAsync()
         {
-            return await _context.Warehouses.Include(x => x.Items).ToListAsync();
+            return await _context.Items.ToListAsync();
         }
 
-        public async Task<Warehouse?> GetWarehouseByIdAsync(int id)
+        public async Task<Item?> GetItemByIdAsync(int id)
         {
-            return await _context.Warehouses.Include(x => x.Items)
-                                             .FirstOrDefaultAsync(w => w.Id == id);
+            return await _context.Items.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task<Warehouse?> CreateWarehouseAsync(Warehouse warehouse)
+        public async Task<Item?> CreateItemAsync(Item item)
         {
-            if (warehouse == null) return null;
+            if (item == null) return null;
 
-            _context.Warehouses.Add(warehouse);
+            _context.Items.Add(item);
             await _context.SaveChangesAsync();
-            return warehouse;
+            return item;
         }
 
-        public async Task<Warehouse?> UpdateWarehouseAsync(Warehouse warehouse)
+        public async Task<Item?> UpdateItemAsync(int id, Item item)
         {
-            if (warehouse == null || warehouse.Id == 0) return null;
+            if (id != item.Id) return null;
 
-            _context.Entry(warehouse).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await WarehouseExistsAsync(warehouse.Id)) return null;
+                if (!await ItemExistsAsync(id)) return null;
                 throw;
             }
-            return warehouse;
+            return item;
         }
 
-        public async Task<Warehouse?> DeleteWarehouseAsync(int id)
+        public async Task<Item?> DeleteItemAsync(int id)
         {
-            var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse == null) return null;
+            var item = await _context.Items.FindAsync(id);
+            if (item == null) return null;
 
-            _context.Warehouses.Remove(warehouse);
+            _context.Items.Remove(item);
             await _context.SaveChangesAsync();
-            return warehouse;
+            return item;
         }
 
-        public async Task<bool> WarehouseExistsAsync(int id)
+        public async Task<bool> ItemExistsAsync(int id)
         {
-            return await _context.Warehouses.AnyAsync(e => e.Id == id);
+            return await _context.Items.AnyAsync(e => e.Id == id);
         }
     }
 }
