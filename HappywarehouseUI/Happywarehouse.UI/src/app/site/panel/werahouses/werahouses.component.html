@@ -1,0 +1,26 @@
+<div class="container mt-4">
+    <h2>Warehouses</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>Country</th>
+          <th>Items Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let warehouse of warehouses">
+          <td>{{ warehouse.id }}</td>
+          <td>{{ warehouse.name }}</td>
+          <td>{{ warehouse.address }}</td>
+          <td>{{ warehouse.city }}</td>
+          <td>{{ warehouse.country }}</td>
+          <td>{{ warehouse.items.length }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

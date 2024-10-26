@@ -98,7 +98,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "HappyWarehouseOrigins", policy =>
     {
-        policy.WithOrigins("https://localhost:44343", "http://localhost:4200")
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
     });

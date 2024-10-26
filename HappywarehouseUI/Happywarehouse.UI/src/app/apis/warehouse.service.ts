@@ -1,4 +1,4 @@
-import { warehouse } from './../models/warehouse';
+import { warehouse } from '../core/models/warehouse';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

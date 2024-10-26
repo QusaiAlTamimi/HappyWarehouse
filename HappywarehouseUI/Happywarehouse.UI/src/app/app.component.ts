@@ -1,33 +1,18 @@
-import { WarehouseService } from './services/warehouse.service';
-import { warehouse } from './models/warehouse';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  template: '<router-outlet></router-outlet>',
 })
-export class AppComponent {
-  title = 'Happywarehouse.UI';
-  warehouses? : warehouse[] =[];
-  warehouseToEdit?: warehouse;
-  constructor(private WarehouseService : WarehouseService) {}
+export class AppComponent implements OnInit {
+  title: string = 'Happy Warehouse';
 
-  ngOnInit() : void {
-    this.WarehouseService.
-    getAll()
-    .subscribe((result: warehouse[]) => (this.warehouses = result));
+  constructor(private titleService: Title) {
+    this.titleService.setTitle(this.title);
   }
 
-  updateList(warehouses: warehouse[]) {
-    this.warehouses = warehouses;
+  ngOnInit(): void {
   }
 
-  initWarehouse() {
-    this.warehouseToEdit = new warehouse();
-  }
-
-  editWarehouse(warehouse: warehouse) {
-    this.warehouseToEdit = warehouse;
-  }
 }

@@ -1,4 +1,4 @@
-import { user,userLogin } from '../models/user';
+import { LoginRequest, LoginResponse, user } from '../core/models/user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -19,8 +19,8 @@ export class userService {
     return this.http.get<user[]>(`${environment.apiUrl}/${this.url}/GetById/${user.id}`);
   }
 
-  public login(userLogin: userLogin): Observable<userLogin> {
-    return this.http.post<userLogin>(
+  public login(userLogin: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
       `${environment.apiUrl}/${this.url}/Login`,
       userLogin
     );
