@@ -8,3 +8,8 @@ export class warehouse {
   country?: number;
   items: item[] = [];
 }
+
+export class WarehouseSelectListItem {
+  id?: number;
+  name = '';
+}

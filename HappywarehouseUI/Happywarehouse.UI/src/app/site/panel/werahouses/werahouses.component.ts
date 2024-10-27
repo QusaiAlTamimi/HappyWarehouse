@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WarehouseService } from 'src/app/apis/warehouse.service';
+import { Country } from 'src/app/core/models/countries.enum';
 import { warehouse } from 'src/app/core/models/warehouse';
 
 @Component({
@@ -11,12 +12,31 @@ export class WerahousesComponent implements OnInit {
   public warehouses: warehouse[] = [];
   public newWarehouse: warehouse = { id: 0, name: '', address: '', city: '', country: 0, items: [] };
   public showForm = false;
-  public editWarehouseId: number | null | undefined = null; // Track the id of the warehouse being edited
+  public editWarehouseId: number | null | undefined = null;
+  public countries: { id: number; name: string }[] = [];
 
   constructor(private warehouseService: WarehouseService) { }
 
   ngOnInit(): void {
     this.loadWarehouses();
+    this.countries = this.getCountriesList(); // Initialize countries here
+  }
+
+  getCountriesList() {
+    return Object.keys(Country)
+      .filter(key => isNaN(Number(key))) // Filter out numeric enum keys
+      .map(key => ({
+        id: Country[key as keyof typeof Country],
+        name: key.replace(/([A-Z])/g, ' $1').trim()
+      }));
+  }
+
+  getCountryName(countryId?: number): string {
+    if (countryId !== undefined && countryId in Country) {
+      const countryName = Country[countryId.toString() as keyof typeof Country];
+      return typeof countryName === 'string' ? countryName : String(countryName);
+    }
+    return 'Unknown'; // Handle undefined or invalid IDs
   }
 
   loadWarehouses(): void {
@@ -77,4 +97,5 @@ export class WerahousesComponent implements OnInit {
     this.showForm = false; // Hide the form after submission
     this.editWarehouseId = null; // Reset the edit ID
   }
+
 }

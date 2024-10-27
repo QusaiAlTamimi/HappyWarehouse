@@ -24,7 +24,11 @@
     </div>
     <div class="form-group mb-2">
       <label for="country">Country</label>
-      <input type="text" id="country" class="form-control" [(ngModel)]="newWarehouse.country" name="country" required />
+      <select id="country" name="country" class="form-control" [(ngModel)]="newWarehouse.country">
+        <option *ngFor="let country of countries" [value]="country.id">
+          {{ country.name }}
+        </option>
+      </select>
     </div>
     <button type="submit" style="display: block;justify-self: center;margin: 30px;" class="btn btn-success">{{ newWarehouse.id === 0 ? 'Create' : 'Update' }}</button>
   </form>
@@ -48,7 +52,7 @@
         <td>{{ warehouse.name }}</td>
         <td>{{ warehouse.address }}</td>
         <td>{{ warehouse.city }}</td>
-        <td>{{ warehouse.country }}</td>
+        <td>{{ getCountryName(warehouse.country) }}</td>
         <td>{{ warehouse.items.length }}</td>
         <td class="d-flex justify-content-around">
           <button class="btn btn-warning btn-sm" (click)="editWarehouse(warehouse)">Edit</button>

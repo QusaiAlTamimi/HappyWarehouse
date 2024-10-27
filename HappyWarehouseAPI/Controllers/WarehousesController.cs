@@ -74,5 +74,12 @@ namespace HappyWarehouseAPI.Controllers
 
             return Ok(deletedWarehouse);
         }
+
+        [HttpGet("SelectList")]
+        public async Task<IActionResult> GetSelectList()
+        {
+            var warehouseSelectList = await _warehouseService.GetWarehouseSelectListAsync();
+            return Ok(warehouseSelectList);
+        }
     }
 }

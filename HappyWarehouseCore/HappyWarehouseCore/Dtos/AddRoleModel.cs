@@ -2,12 +2,9 @@
 
 namespace HappyWarehouseCore.Dtos
 {
-    public class AddRoleModel
+    public class WarehouseSelectListItem
     {
-        [Required]
-        public string UserId { get; set; }
-
-        [Required]
-        public string Role { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

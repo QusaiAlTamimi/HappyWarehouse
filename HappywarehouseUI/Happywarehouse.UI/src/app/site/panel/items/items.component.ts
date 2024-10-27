@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { log } from 'console';
 import { itemService } from 'src/app/apis/item.service'; // Correct the import to use camel case
 import { item } from 'src/app/core/models/item';
+import { WarehouseSelectListItem } from 'src/app/core/models/warehouse';
 
 @Component({
   selector: 'app-items',
@@ -21,11 +22,13 @@ export class ItemsComponent implements OnInit {
   };
   public showItemForm = false; // Changed to be more descriptive
   public editItemId: number | null | undefined = null; // Track the id of the item being edited
+  public warehouseSelectList: WarehouseSelectListItem[] = []; // New property for select list
 
   constructor(private itemService: itemService) {}
 
   ngOnInit(): void {
     this.loadItems();
+    this.getWarehouseSelectList();
   }
 
   loadItems(): void {
@@ -40,6 +43,25 @@ export class ItemsComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+
+  getWarehouseSelectList(): void {
+    this.itemService.WarehuseSelectList().subscribe({
+      next: (response) => {
+        if (response) {
+          this.warehouseSelectList = response; // Assign the response to the select list
+          console.log(this.warehouseSelectList);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  getWarehouseName(warehouseId?: number): string {
+    const warehouse = this.warehouseSelectList.find(w => w.id === warehouseId);
+    return warehouse ? warehouse.name : 'Unknown'; // Return 'Unknown' if not found
   }
 
   createItem(): void {

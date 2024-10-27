@@ -3,16 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { WarehouseSelectListItem } from '../core/models/warehouse';
 
 @Injectable({
   providedIn: 'root'
 })
 export class itemService {
   private url = "Items";
+  private warehouseUrl = "Warehouses";
+
   constructor(private http: HttpClient) { }
 
   public getAll() : Observable<item[]>{
     return this.http.get<item[]>(`${environment.apiUrl}/${this.url}/GetAll`);
+  }
+
+  public WarehuseSelectList() : Observable<WarehouseSelectListItem[]>{
+    return this.http.get<WarehouseSelectListItem[]>(`${environment.apiUrl}/${this.warehouseUrl}/SelectList`);
   }
 
   public getById(item : item) : Observable<item[]>{

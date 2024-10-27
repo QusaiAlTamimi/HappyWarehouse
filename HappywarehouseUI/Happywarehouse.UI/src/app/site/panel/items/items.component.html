@@ -31,7 +31,12 @@
     </div>
     <div class="form-group mb-2">
       <label for="WarehouseId">Warehouse ID</label>
-      <input type="number" id="WarehouseId" class="form-control" [(ngModel)]="newItem.warehouseId" name="warehouseId" required />
+      <select id="WarehouseId" class="form-control" [(ngModel)]="newItem.warehouseId" name="warehouseId" required>
+        <option value="" disabled>Select Warehouse</option>
+        <option *ngFor="let warehouse of warehouseSelectList" [value]="warehouse.id">
+          {{ warehouse.name }}
+        </option>
+      </select>
     </div>
     <button type="submit" style="display: block;justify-self: center;margin: 30px;" class="btn btn-success">{{ newItem.id === 0 ? 'Create' : 'Update' }}</button>
   </form>
@@ -46,7 +51,7 @@
         <th>Quantity</th>
         <th>Cost Price</th>
         <th>MSRP Price</th>
-        <th>Warehouse ID</th>
+        <th>Warehouse</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -58,7 +63,7 @@
         <td>{{ item.qty }}</td>
         <td>{{ item.costPrice }}</td>
         <td>{{ item.msrpPrice }}</td>
-        <td>{{ item.warehouseId }}</td>
+        <td>{{ getWarehouseName(item.warehouseId) }}</td>
         <td class="d-flex justify-content-around">
           <button class="btn btn-warning btn-sm" (click)="editItem(item)">Edit</button>
           <button class="btn btn-danger btn-sm" (click)="deleteItem(item.id!)">Delete</button>

@@ -1,4 +1,5 @@
-﻿using HappyWarehouseCore.Models;
+﻿using HappyWarehouseCore.Dtos;
+using HappyWarehouseCore.Models;
 
 namespace HappyWarehouseService.IServices
 {
@@ -9,6 +10,7 @@ namespace HappyWarehouseService.IServices
         Task<Warehouse?> CreateWarehouseAsync(Warehouse warehouse);
         Task<Warehouse?> UpdateWarehouseAsync(Warehouse warehouse);
         Task<Warehouse?> DeleteWarehouseAsync(int id);
+        Task<IEnumerable<WarehouseSelectListItem>> GetWarehouseSelectListAsync();
         Task<bool> WarehouseExistsAsync(int id);
     }
 }

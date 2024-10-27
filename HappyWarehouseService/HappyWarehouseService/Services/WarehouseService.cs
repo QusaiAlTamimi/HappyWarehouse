@@ -1,4 +1,5 @@
-﻿using HappyWarehouseCore.Models;
+﻿using HappyWarehouseCore.Dtos;
+using HappyWarehouseCore.Models;
 using HappyWarehouseData.DataAccess;
 using HappyWarehouseService.IServices;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +65,16 @@ namespace HappyWarehouseService.Services
         public async Task<bool> WarehouseExistsAsync(int id)
         {
             return await _context.Warehouses.AnyAsync(e => e.Id == id);
+        }
+
+        public async Task<IEnumerable<WarehouseSelectListItem>> GetWarehouseSelectListAsync()
+        {
+            return await _context.Warehouses
+                .Select(w => new WarehouseSelectListItem
+                {
+                    Id = w.Id,
+                    Name = w.Name
+                }).ToListAsync();
         }
     }
 }
