@@ -3,8 +3,8 @@ export class user {
   fullName = "";
   active? :boolean;
   userName = "";
-  Email = "";
-  Password = "";
+  email = "";
+  password = "";
 }
 
 export interface LoginResponse {

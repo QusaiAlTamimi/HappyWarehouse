@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { GlobalInterceptor } from './core/services/global.interceptor';
 import { WerahousesComponent } from './site/panel/werahouses/werahouses.component';
 import { ItemsComponent } from './site/panel/items/items.component';
+import { UsersComponent } from './site/panel/users/users.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ItemsComponent } from './site/panel/items/items.component';
     PanelLayoutComponent,
     WerahousesComponent,
     ItemsComponent,
+    UsersComponent,
   ],
   imports: [
     BrowserModule,

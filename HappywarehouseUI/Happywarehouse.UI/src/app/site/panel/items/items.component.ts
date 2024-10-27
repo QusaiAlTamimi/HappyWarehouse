@@ -50,7 +50,6 @@ export class ItemsComponent implements OnInit {
       next: (response) => {
         if (response) {
           this.warehouseSelectList = response; // Assign the response to the select list
-          console.log(this.warehouseSelectList);
         }
       },
       error: (error) => {

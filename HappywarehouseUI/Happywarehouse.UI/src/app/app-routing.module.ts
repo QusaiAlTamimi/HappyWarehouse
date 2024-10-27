@@ -8,6 +8,7 @@ import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.compo
 import { PanelLayoutComponent } from './core/layout/panel-layout/panel-layout.component';
 import { WerahousesComponent } from './site/panel/werahouses/werahouses.component';
 import { ItemsComponent } from './site/panel/items/items.component';
+import { UsersComponent } from './site/panel/users/users.component';
 
 // Custom guard to protect routes
 @Injectable({
@@ -54,6 +55,10 @@ const routes: Routes = [
       {
         path: 'items',
         component: ItemsComponent
+      },
+      {
+        path: 'users',
+        component: UsersComponent
       }
     ]
   },

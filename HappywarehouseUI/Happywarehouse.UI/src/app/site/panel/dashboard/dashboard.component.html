@@ -1,1 +1,152 @@
-<p>dashboard works!</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            background-color: #f0f4f8; /* Light background for contrast */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex; /* Use flexbox for layout */
+            max-width: 1200px; /* Set a max-width for the container */
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .warehouse-section,
+        .items-section {
+            flex: 1; /* Make both sections flexible */
+            margin: 10px; /* Add some margin */
+            padding: 20px; /* Add padding */
+            background-color: #ffffff; /* Background color for sections */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow for sections */
+        }
+
+        .warehouse {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s;
+        }
+
+        .warehouse:hover {
+            background-color: #f9f9f9; /* Hover effect */
+        }
+
+        .warehouse:last-child {
+            border-bottom: none;
+        }
+
+        .warehouse-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c3e50; /* Dark color for contrast */
+        }
+
+        .item-count {
+            color: #7f8c8d; /* Lighter color for item count */
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #2c3e50; /* Consistent color for headings */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        li:hover {
+            transform: translateY(-2px); /* Lift effect on hover */
+            background-color: #ecf0f1; /* Light background on hover */
+        }
+
+        .no-data {
+            text-align: center;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column; /* Stack sections on small screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="warehouse-section">
+            <h1>Warehouses</h1>
+            <div *ngIf="warehouses.length > 0; else noWarehouses">
+                <div class="warehouse" *ngFor="let warehouse of warehouses">
+                    <div class="warehouse-name">{{ warehouse.name }}</div>
+                    <div class="item-count">Items: {{ warehouse.items.length }}</div>
+                </div>
+            </div>
+            <ng-template #noWarehouses>
+                <p class="no-data">No warehouses available.</p>
+            </ng-template>
+        </div>
+
+        <div class="items-section">
+            <!-- Items Section: Ascending Order -->
+            <div *ngIf="itemsAsc.length > 0; else noItemsAsc">
+                <h2><i class="fas fa-sort-amount-up"></i> Items (Low to High)</h2>
+                <ul>
+                    <li *ngFor="let item of itemsAsc">
+                        {{ item.name }} - Quantity: {{ item.qty }}
+                    </li>
+                </ul>
+            </div>
+            <ng-template #noItemsAsc>
+                <p class="no-data">No items available in ascending order.</p>
+            </ng-template>
+
+            <!-- Items Section: Descending Order -->
+            <div *ngIf="itemsDesc.length > 0; else noItemsDesc">
+                <h2><i class="fas fa-sort-amount-down"></i> Items (High to Low)</h2>
+                <ul>
+                    <li *ngFor="let item of itemsDesc">
+                        {{ item.name }} - Quantity: {{ item.qty }}
+                    </li>
+                </ul>
+            </div>
+            <ng-template #noItemsDesc>
+                <p class="no-data">No items available in descending order.</p>
+            </ng-template>
+        </div>
+    </div>
+</body>
+
+</html>

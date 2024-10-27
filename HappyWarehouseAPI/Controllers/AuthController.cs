@@ -43,8 +43,12 @@ namespace HappyItemAPI.Controllers
 
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
+            else
+            {
+                return Ok(model);
+            }
 
-            return Ok(result);
+            //return Ok(result);
         }
         [AllowAnonymous]
         [HttpPost("Login")]

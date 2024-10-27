@@ -26,16 +26,16 @@ export class userService {
     );
   }
 
-  public create(user: user): Observable<user[]> {
-    return this.http.post<user[]>(
+  public create(user: user): Observable<user> {
+    return this.http.post<user>(
       `${environment.apiUrl}/${this.url}/Create`,
       user
     );
   }
 
-  public delete(user: user): Observable<user[]> {
-    return this.http.delete<user[]>(
-      `${environment.apiUrl}/${this.url}/DeleteUser?userId=${user.id}`
+  public delete(id: string): Observable<user> {
+    return this.http.delete<user>(
+      `${environment.apiUrl}/${this.url}/DeleteUser?userId=${id}`
     );
   }
 }

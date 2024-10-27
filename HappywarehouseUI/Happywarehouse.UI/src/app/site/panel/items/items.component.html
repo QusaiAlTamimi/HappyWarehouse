@@ -1,6 +1,6 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between">
-    <h2>Items</h2>
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary font-weight-bold">Items</h2>
 
   <!-- Button to show the form -->
   <button class="btn btn-primary mb-3" (click)="showItemForm = !showItemForm">
@@ -8,7 +8,9 @@
   </button>
 </div>
   <!-- Hidden form for creating or editing an item -->
-  <form *ngIf="showItemForm" (ngSubmit)="createItem()">
+  <form *ngIf="showItemForm" (ngSubmit)="createItem()" class="shadow p-4 bg-light rounded mb-4">
+    <h4 class="text-secondary">{{ newItem.id === 0 ? 'Create New Item' : 'Edit Item' }}</h4>
+
     <div class="form-group mb-2">
       <label for="name">Name</label>
       <input type="text" id="name" class="form-control" [(ngModel)]="newItem.name" name="name" required />
@@ -30,7 +32,7 @@
       <input type="number" id="MSRPPrice" class="form-control" [(ngModel)]="newItem.msrpPrice" name="msrpPrice" required />
     </div>
     <div class="form-group mb-2">
-      <label for="WarehouseId">Warehouse ID</label>
+      <label for="WarehouseId">Warehouse</label>
       <select id="WarehouseId" class="form-control" [(ngModel)]="newItem.warehouseId" name="warehouseId" required>
         <option value="" disabled>Select Warehouse</option>
         <option *ngFor="let warehouse of warehouseSelectList" [value]="warehouse.id">
@@ -38,7 +40,7 @@
         </option>
       </select>
     </div>
-    <button type="submit" style="display: block;justify-self: center;margin: 30px;" class="btn btn-success">{{ newItem.id === 0 ? 'Create' : 'Update' }}</button>
+    <button type="submit" class="btn btn-success mt-3">{{ newItem.id === 0 ? 'Create' : 'Update' }}</button>
   </form>
 
   <!-- Items Table -->
