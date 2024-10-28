@@ -195,6 +195,8 @@ namespace HappyWarehouseService.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return "User not found.";
+            if (user.Email == "admin@happywarehouse.com")
+                return "This User connnot be deleted.";
 
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
