@@ -46,7 +46,6 @@ namespace HappyWarehouseService.Services
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
-            await _logsService.LogCreateAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
 
             if (!result.Succeeded)
             {
@@ -57,6 +56,9 @@ namespace HappyWarehouseService.Services
 
                 return new AuthModel { Message = errors };
             }
+            else
+                await _logsService.LogCreateAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
+
             if (!await _roleManager.RoleExistsAsync("User"))
             {
                 // Create a new role
@@ -77,6 +79,78 @@ namespace HappyWarehouseService.Services
             };
         }
 
+        public async Task<AuthModel> UpdateAsync(string userId, RegisterModel model)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new AuthModel { Message = "User not found!" };
+            }
+
+            if (await _userManager.FindByEmailAsync(model.Email) is not null && user.Email != model.Email)
+            {
+                return new AuthModel { Message = "Email is already in use by another user!" };
+            }
+
+            if (await _userManager.FindByNameAsync(model.Username) is not null && user.UserName != model.Username)
+            {
+                return new AuthModel { Message = "Username is already in use by another user!" };
+            }
+
+            user.UserName = model.Username;
+            user.Email = model.Email;
+            user.FullName = model.FullName;
+            user.Active = model.Active;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return new AuthModel { Message = errors };
+            }
+            else
+                await _logsService.LogUpdateAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
+
+            var jwtSecurityToken = await CreateJwtToken(user);
+
+            return new AuthModel
+            {
+                Email = user.Email,
+                ExpiresOn = jwtSecurityToken.ValidTo,
+                IsAuthenticated = true,
+                Roles = (List<string>)await _userManager.GetRolesAsync(user),
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                Username = user.UserName
+            };
+        }
+
+        public async Task<AuthModel> ChangePasswordAsync(string userId, ChangePasswordDto model)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new AuthModel { Message = "User not found!" };
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            await _logsService.LogUpdateAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return new AuthModel { Message = errors };
+            }
+            else
+                await _logsService.LogCreateAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
+
+            return new AuthModel
+            {
+                Message = "Password changed successfully!",
+                IsAuthenticated = true // Assuming the user stays authenticated
+            };
+        }
         public async Task<AuthModel> GetTokenAsync(TokenRequestModel model)
         {
             var authModel = new AuthModel();
@@ -128,16 +202,22 @@ namespace HappyWarehouseService.Services
             else
                 await _logsService.LogDeleteAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
 
-            return null; // Indicate success with null
+            return null;
         }
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
-            return await _userManager.Users.ToListAsync(); // Fetch all users
+            return await _userManager.Users.ToListAsync();
         }
-
+        public async Task<List<ApplicationUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            return await _userManager.Users
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
         public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         {
-            return await _userManager.FindByIdAsync(userId); // Find user by ID
+            return await _userManager.FindByIdAsync(userId);
         }
 
         private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)

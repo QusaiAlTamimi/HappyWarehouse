@@ -2,6 +2,7 @@
 using HappyWarehouseCore.Dtos;
 using HappyWarehouseService.IServices;
 using Microsoft.AspNetCore.Authorization;
+using HappyWarehouseService.Services;
 
 namespace HappyItemAPI.Controllers
 {
@@ -21,6 +22,13 @@ namespace HappyItemAPI.Controllers
         {
             var users = await _authService.GetAllUsersAsync();
             return Ok(users); // Return list of users
+        }
+
+        [HttpGet("GetPaged")]
+        public async Task<IActionResult> GetPaged(int pageNumber, int pageSize)
+        {
+            var users = await _authService.GetAllUsersAsync(pageNumber, pageSize);
+            return Ok(users);
         }
 
         [HttpGet("GetById")]
@@ -49,6 +57,39 @@ namespace HappyItemAPI.Controllers
             }
 
             //return Ok(result);
+        }
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateUser(string userId, [FromBody] RegisterModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("User model is null.");
+            }
+
+            var result = await _authService.UpdateAsync(userId, model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(string userId, [FromBody] ChangePasswordDto model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Change password model is null.");
+            }
+
+            var result = await _authService.ChangePasswordAsync(userId, model);
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                return BadRequest(result.Message); // Return error message if any
+            }
+
+            return Ok(result); // Return success message
         }
         [AllowAnonymous]
         [HttpPost("Login")]

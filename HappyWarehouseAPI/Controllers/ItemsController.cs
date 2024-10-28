@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using HappyWarehouseService.IServices;
 using Microsoft.AspNetCore.Authorization;
+using HappyWarehouseService.Services;
 
 namespace HappyItemAPI.Controllers
 {
@@ -22,6 +23,14 @@ namespace HappyItemAPI.Controllers
         public async Task<IActionResult> GetAll()
         {
             var items = await _itemService.GetAllItemsAsync();
+            return Ok(items);
+        }
+
+        // GET: api/GetPaged
+        [HttpGet("GetPaged")]
+        public async Task<IActionResult> GetPaged(int pageNumber, int pageSize)
+        {
+            var items = await _itemService.GetAllItemsAsync(pageNumber, pageSize);
             return Ok(items);
         }
 

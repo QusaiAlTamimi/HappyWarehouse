@@ -21,7 +21,14 @@ namespace HappyWarehouseService.Services
         {
             return await _context.Warehouses.Include(x => x.Items).ToListAsync();
         }
-
+        public async Task<List<Warehouse>> GetAllWarehousesAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            return await _context.Warehouses
+                .Include(x => x.Items)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
         public async Task<Warehouse?> GetWarehouseByIdAsync(int id)
         {
             return await _context.Warehouses.Include(x => x.Items)

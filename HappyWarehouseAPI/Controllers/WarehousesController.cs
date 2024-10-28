@@ -27,6 +27,14 @@ namespace HappyWarehouseAPI.Controllers
             return Ok(warehouses);
         }
 
+        // GET: api/GetPaged
+        [HttpGet("GetPaged")]
+        public async Task<IActionResult> GetPaged(int pageNumber , int pageSize)
+        {
+            var warehouses = await _warehouseService.GetAllWarehousesAsync(pageNumber,pageSize);
+            return Ok(warehouses);
+        }
+
         // GET: api/Warehouses/5
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById(int? id)
