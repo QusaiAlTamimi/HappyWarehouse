@@ -17,13 +17,16 @@ namespace HappyWarehouseService.Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JWT _jwt;
         private readonly IConfiguration _configuration;
+        private readonly ILogsService _logsService;
 
-        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, ILogsService logsService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _jwt = _configuration.GetSection("JwtSettings").Get<JWT>();
+            _logsService = logsService;
+
         }
 
         public async Task<AuthModel> RegisterAsync(RegisterModel model)
@@ -43,6 +46,7 @@ namespace HappyWarehouseService.Services
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
+            await _logsService.LogCreateAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
 
             if (!result.Succeeded)
             {
@@ -121,6 +125,8 @@ namespace HappyWarehouseService.Services
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
                 return "Failed to delete user: " + string.Join(", ", result.Errors.Select(e => e.Description));
+            else
+                await _logsService.LogDeleteAsync(new LogDto { TableName = "AspNetUsers", RecordId = user.Id.ToString() });
 
             return null; // Indicate success with null
         }

@@ -42,10 +42,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-
+builder.Services.AddScoped<ILogsService, LogsService>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Warehouse Api's", Version = "v1" });
 
     // Configure JWT authentication for Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -112,6 +113,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await DbInitializer.Seed(services); // Ensure this call uses the correct scope
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error during seeding: {ex.Message}");
+    }
+}
+
 app.UseCors("HappyWarehouseOrigins");
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Make sure authentication middleware is registered

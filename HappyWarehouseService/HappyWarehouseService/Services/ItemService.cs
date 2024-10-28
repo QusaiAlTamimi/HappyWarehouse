@@ -1,4 +1,5 @@
-﻿using HappyWarehouseCore.Models;
+﻿using HappyWarehouseCore.Dtos;
+using HappyWarehouseCore.Models;
 using HappyWarehouseData.DataAccess;
 using HappyWarehouseService.IServices;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace HappyWarehouseService.Services
     public class ItemService : IItemService
     {
         private readonly DataContext _context;
+        private readonly ILogsService _logsService;
 
-        public ItemService(DataContext context)
+        public ItemService(DataContext context, ILogsService logsService)
         {
             _context = context;
+            _logsService = logsService;
         }
 
         public async Task<List<Item>> GetAllItemsAsync()
@@ -30,6 +33,7 @@ namespace HappyWarehouseService.Services
 
             _context.Items.Add(item);
             await _context.SaveChangesAsync();
+            await _logsService.LogCreateAsync(new LogDto { TableName = "Items", RecordId = item.Id.ToString() });
             return item;
         }
 
@@ -41,6 +45,7 @@ namespace HappyWarehouseService.Services
             try
             {
                 await _context.SaveChangesAsync();
+                await _logsService.LogUpdateAsync(new LogDto { TableName = "Items", RecordId = item.Id.ToString() });
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -57,6 +62,7 @@ namespace HappyWarehouseService.Services
 
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
+            await _logsService.LogDeleteAsync(new LogDto { TableName = "Items", RecordId = item.Id.ToString() });
             return item;
         }
 

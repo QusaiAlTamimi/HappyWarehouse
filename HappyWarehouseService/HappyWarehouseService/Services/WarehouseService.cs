@@ -9,10 +9,12 @@ namespace HappyWarehouseService.Services
     public class WarehouseService : IWarehouseService
     {
         private readonly DataContext _context;
+        private readonly ILogsService _logsService;
 
-        public WarehouseService(DataContext context)
+        public WarehouseService(DataContext context,ILogsService logsService)
         {
             _context = context;
+            _logsService = logsService;
         }
 
         public async Task<List<Warehouse>> GetAllWarehousesAsync()
@@ -32,6 +34,7 @@ namespace HappyWarehouseService.Services
 
             _context.Warehouses.Add(warehouse);
             await _context.SaveChangesAsync();
+            await _logsService.LogCreateAsync(new LogDto { TableName = "Warehouses", RecordId = warehouse.Id.ToString() });
             return warehouse;
         }
 
@@ -43,6 +46,7 @@ namespace HappyWarehouseService.Services
             try
             {
                 await _context.SaveChangesAsync();
+                await _logsService.LogUpdateAsync(new LogDto { TableName = "Warehouses", RecordId = warehouse.Id.ToString() });
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -59,6 +63,7 @@ namespace HappyWarehouseService.Services
 
             _context.Warehouses.Remove(warehouse);
             await _context.SaveChangesAsync();
+            await _logsService.LogDeleteAsync(new LogDto { TableName = "Warehouses", RecordId = id.ToString() });
             return warehouse;
         }
 
