@@ -21,12 +21,23 @@ namespace HappyWarehouseService.Services
         {
             return await _context.Items.ToListAsync();
         }
-        public async Task<List<Item>> GetAllItemsAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PaginationDto<Item>> GetAllItemsAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Items
+            var totalRecords = await _context.Items.CountAsync();
+
+            var Items = await _context.Items
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            var paginationDto = new PaginationDto<Item>(
+                pageNumber,
+                pageSize,
+                totalRecords,
+                Items
+            );
+
+            return paginationDto;
         }
         public async Task<Item?> GetItemByIdAsync(int id)
         {

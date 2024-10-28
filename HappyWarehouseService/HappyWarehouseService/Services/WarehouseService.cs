@@ -21,13 +21,24 @@ namespace HappyWarehouseService.Services
         {
             return await _context.Warehouses.Include(x => x.Items).ToListAsync();
         }
-        public async Task<List<Warehouse>> GetAllWarehousesAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PaginationDto<Warehouse>> GetAllWarehousesAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Warehouses
+            var totalRecords = await _context.Warehouses.CountAsync();
+
+            var warehouses = await _context.Warehouses
                 .Include(x => x.Items)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            var paginationDto = new PaginationDto<Warehouse>(
+                pageNumber,
+                pageSize,
+                totalRecords,
+                warehouses
+            );
+
+            return paginationDto;
         }
         public async Task<Warehouse?> GetWarehouseByIdAsync(int id)
         {

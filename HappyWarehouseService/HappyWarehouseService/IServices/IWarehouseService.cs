@@ -6,7 +6,7 @@ namespace HappyWarehouseService.IServices
     public interface IWarehouseService
     {
         Task<List<Warehouse>> GetAllWarehousesAsync();
-        Task<List<Warehouse>> GetAllWarehousesAsync(int pageNumber = 1, int pageSize = 10);
+        Task<PaginationDto<Warehouse>> GetAllWarehousesAsync(int pageNumber = 1, int pageSize = 10);
         Task<Warehouse?> GetWarehouseByIdAsync(int id);
         Task<Warehouse?> CreateWarehouseAsync(Warehouse warehouse);
         Task<Warehouse?> UpdateWarehouseAsync(Warehouse warehouse);

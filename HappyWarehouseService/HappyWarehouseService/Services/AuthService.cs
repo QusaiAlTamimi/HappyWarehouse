@@ -208,12 +208,23 @@ namespace HappyWarehouseService.Services
         {
             return await _userManager.Users.ToListAsync();
         }
-        public async Task<List<ApplicationUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PaginationDto<ApplicationUser>> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _userManager.Users
+            var totalRecords = await _userManager.Users.CountAsync();
+
+            var users = await _userManager.Users
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            var paginationDto = new PaginationDto<ApplicationUser>(
+                pageNumber,
+                pageSize,
+                totalRecords,
+                users
+            );
+
+            return paginationDto;
         }
         public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         {
