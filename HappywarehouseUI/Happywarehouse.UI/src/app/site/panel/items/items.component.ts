@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { log } from 'console';
 import { itemService } from 'src/app/apis/item.service'; // Correct the import to use camel case
 import { item } from 'src/app/core/models/item';
+import { PaginationDTO } from 'src/app/core/models/paginationDTO';
 import { WarehouseSelectListItem } from 'src/app/core/models/warehouse';
 
 @Component({
@@ -10,7 +12,9 @@ import { WarehouseSelectListItem } from 'src/app/core/models/warehouse';
   styleUrls: ['./items.component.css'],
 })
 export class ItemsComponent implements OnInit {
-  public items: item[] = [];
+  data: item[] = []; // Full data array
+  pagination: PaginationDTO<item> = new PaginationDTO<item>(); // Pagination object
+
   public newItem: item = {
     id: 0,
     name: '',
@@ -24,7 +28,7 @@ export class ItemsComponent implements OnInit {
   public editItemId: number | null | undefined = null; // Track the id of the item being edited
   public warehouseSelectList: WarehouseSelectListItem[] = []; // New property for select list
 
-  constructor(private itemService: itemService) {}
+  constructor(private itemService: itemService,private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.loadItems();
@@ -32,11 +36,11 @@ export class ItemsComponent implements OnInit {
   }
 
   loadItems(): void {
-    this.itemService.getAll().subscribe({
+    this.itemService.getPaged(this.pagination.pageNumber, this.pagination.pageSize).subscribe({
       next: (response) => {
         if (response) {
-          this.items = response;
-          console.log(this.items);
+          this.pagination = response;
+          this.data = response.list;
         }
       },
       error: (error) => {
@@ -64,11 +68,21 @@ export class ItemsComponent implements OnInit {
   }
 
   createItem(): void {
+    if (    
+      !this.newItem.name ||
+      !this.newItem.skuCode  ||
+      !this.newItem.qty  ||
+      !this.newItem.costPrice ||
+      !this.newItem.msrpPrice ||
+      !this.newItem.warehouseId){
+      return;
+    }
+    
     if (this.newItem.id === 0) {
       // Creating a new item
       this.itemService.create(this.newItem).subscribe({
         next: (item) => {
-          this.items.push(item);
+          this.data.push(item);
           this.resetForm();
         },
         error: (error) => console.log(error),
@@ -77,9 +91,9 @@ export class ItemsComponent implements OnInit {
       // Editing an existing item
       this.itemService.update(this.newItem).subscribe({
         next: (updatedItem) => {
-          const index = this.items.findIndex((w) => w.id === updatedItem.id);
+          const index = this.data.findIndex((w) => w.id === updatedItem.id);
           if (index > -1) {
-            this.items[index] = updatedItem; // Update the item in the array
+            this.data[index] = updatedItem; // Update the item in the array
           }
           this.resetForm();
         },
@@ -97,7 +111,7 @@ export class ItemsComponent implements OnInit {
   deleteItem(id: number): void {
     this.itemService.delete(id).subscribe({
       next: () => {
-        this.items = this.items.filter((w) => w.id !== id);
+        this.data = this.data.filter((w) => w.id !== id);
       },
       error: (error) => console.log(error),
     });
@@ -115,5 +129,27 @@ export class ItemsComponent implements OnInit {
     };
     this.showItemForm = false; // Hide the form after submission
     this.editItemId = null; // Reset the edit ID
+  }
+
+  nextPage() {
+    // Go to the next page if it's not the last page
+    if (this.pagination.pageNumber < this.pagination.totalPages) {
+      this.pagination.pageNumber++;
+      this.loadItems();
+    }
+  }
+
+  previousPage() {
+    // Go to the previous page if it's not the first page
+    if (this.pagination.pageNumber > 1) {
+      this.pagination.pageNumber--;
+      this.loadItems();
+    }
+  }
+
+  setPage(page: number) {
+    // Set the current page to the specified page and update pagination
+    this.pagination.pageNumber = page;
+    this.loadItems();
   }
 }

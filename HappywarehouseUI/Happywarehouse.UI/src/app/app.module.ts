@@ -4,7 +4,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule, AuthGuard } from './app-routing.module';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './site/auth/login/login.component';
 import { DashboardComponent } from './site/panel/dashboard/dashboard.component';
 import { AuthLayoutComponent } from './core/layout/auth-layout/auth-layout.component';
@@ -30,7 +30,8 @@ import { UsersComponent } from './site/panel/users/users.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: GlobalInterceptor, multi: true } // Register the interceptor

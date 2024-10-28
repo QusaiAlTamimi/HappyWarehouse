@@ -14,22 +14,38 @@
     <div class="form-group mb-2">
       <label for="name">Name</label>
       <input type="text" id="name" class="form-control" [(ngModel)]="newItem.name" name="name" required />
+      <div *ngIf="!newItem.name">
+        <small >Name is required.</small>
+      </div>
     </div>
     <div class="form-group mb-2">
       <label for="sKUCode">SKU Code</label>
       <input type="text" id="sKUCode" class="form-control" [(ngModel)]="newItem.skuCode" name="skuCode" required />
+      <div *ngIf="!newItem.skuCode">
+        <small >SKU Code is required.</small>
+      </div>
     </div>
     <div class="form-group mb-2">
       <label for="Qty">Quantity</label>
       <input type="number" id="Qty" class="form-control" [(ngModel)]="newItem.qty" name="qty" required />
+      <div *ngIf="!newItem.qty || (newItem.qty && newItem.qty <= 0)">
+        <small *ngIf="!newItem.qty">Quantity is required.</small>
+        <small *ngIf="(newItem.qty && newItem.qty <= 0)">Quantity must be greater than 1.</small>
+      </div>
     </div>
     <div class="form-group mb-2">
       <label for="CostPrice">Cost Price</label>
       <input type="number" id="CostPrice" class="form-control" [(ngModel)]="newItem.costPrice" name="costPrice" required />
+      <div *ngIf="!newItem.costPrice">
+        <small >Cost Price is required.</small>
+      </div>
     </div>
     <div class="form-group mb-2">
       <label for="MSRPPrice">MSRP Price</label>
       <input type="number" id="MSRPPrice" class="form-control" [(ngModel)]="newItem.msrpPrice" name="msrpPrice" required />
+      <div *ngIf="!newItem.msrpPrice">
+        <small >MSRP Price is required.</small>
+      </div>
     </div>
     <div class="form-group mb-2">
       <label for="WarehouseId">Warehouse</label>
@@ -39,8 +55,19 @@
           {{ warehouse.name }}
         </option>
       </select>
+      <div *ngIf="!newItem.warehouseId">
+        <small >Warehouse is required.</small>
+      </div>
     </div>
-    <button type="submit" class="btn btn-success mt-3">{{ newItem.id === 0 ? 'Create' : 'Update' }}</button>
+    <button type="submit" class="btn btn-success mt-3" [disabled]="
+      !this.newItem.name ||
+      !this.newItem.skuCode  ||
+      !this.newItem.qty  ||
+      (this.newItem.qty && this.newItem.qty <= 0)  ||
+      !this.newItem.costPrice ||
+      !this.newItem.msrpPrice ||
+      !this.newItem.warehouseId
+    ">{{ newItem.id === 0 ? 'Create' : 'Update' }}</button>
   </form>
 
   <!-- Items Table -->
@@ -58,7 +85,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of items">
+      <tr *ngFor="let item of data">
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.skuCode }}</td>
@@ -73,4 +100,19 @@
       </tr>
     </tbody>
   </table>
+
+  <nav aria-label="Page navigation" *ngIf="pagination.totalPages > 1">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="pagination.pageNumber === 1">
+        <a class="page-link" (click)="previousPage()">Previous</a>
+      </li>
+      <li *ngFor="let page of [].constructor(pagination.totalPages); let i = index" 
+          class="page-item" [class.active]="pagination.pageNumber === i + 1">
+        <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="pagination.pageNumber === pagination.totalPages">
+        <a class="page-link" (click)="nextPage()">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>

@@ -51,7 +51,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of data">
         <td>{{ user.id }}</td>
         <td>{{ user.fullName }}</td>
         <td>{{ user.email }}</td>
@@ -64,4 +64,19 @@
       </tr>
     </tbody>
   </table>
+
+  <nav aria-label="Page navigation" *ngIf="pagination.totalPages > 1">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="pagination.pageNumber === 1">
+        <a class="page-link" (click)="previousPage()">Previous</a>
+      </li>
+      <li *ngFor="let page of [].constructor(pagination.totalPages); let i = index" 
+          class="page-item" [class.active]="pagination.pageNumber === i + 1">
+        <a class="page-link" (click)="setPage(i + 1)">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="pagination.pageNumber === pagination.totalPages">
+        <a class="page-link" (click)="nextPage()">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WarehouseService } from 'src/app/apis/warehouse.service';
 import { Country } from 'src/app/core/models/countries.enum';
+import { PaginationDTO } from 'src/app/core/models/paginationDTO';
 import { warehouse } from 'src/app/core/models/warehouse';
 
 @Component({
@@ -9,7 +10,8 @@ import { warehouse } from 'src/app/core/models/warehouse';
   styleUrls: ['./werahouses.component.css']
 })
 export class WerahousesComponent implements OnInit {
-  public warehouses: warehouse[] = [];
+  data: warehouse[] = []; // Full data array
+  pagination: PaginationDTO<warehouse> = new PaginationDTO<warehouse>(); // Pagination object
   public newWarehouse: warehouse = { id: 0, name: '', address: '', city: '', country: 0, items: [] };
   public showForm = false;
   public editWarehouseId: number | null | undefined = null;
@@ -40,10 +42,11 @@ export class WerahousesComponent implements OnInit {
   }
 
   loadWarehouses(): void {
-    this.warehouseService.getAll().subscribe({
+    this.warehouseService.getPaged(this.pagination.pageNumber, this.pagination.pageSize).subscribe({
       next: response => {
         if (response) {
-          this.warehouses = response;
+          this.pagination = response;
+          this.data = response.list;
         }
       },
       error: error => {
@@ -57,7 +60,7 @@ export class WerahousesComponent implements OnInit {
       // Creating a new warehouse
       this.warehouseService.create(this.newWarehouse).subscribe({
         next: (warehouse) => {
-          this.warehouses.push(warehouse);
+          this.data.push(warehouse);
           this.resetForm();
         },
         error: (error) => console.log(error),
@@ -66,9 +69,9 @@ export class WerahousesComponent implements OnInit {
       // Editing an existing warehouse
       this.warehouseService.update(this.newWarehouse).subscribe({
         next: (updatedWarehouse) => {
-          const index = this.warehouses.findIndex(w => w.id === updatedWarehouse.id);
+          const index = this.data.findIndex(w => w.id === updatedWarehouse.id);
           if (index > -1) {
-            this.warehouses[index] = updatedWarehouse; // Update the warehouse in the array
+            this.data[index] = updatedWarehouse; // Update the warehouse in the array
           }
           this.resetForm();
         },
@@ -86,7 +89,7 @@ export class WerahousesComponent implements OnInit {
   deleteWarehouse(id: number): void {
     this.warehouseService.delete(id).subscribe({
       next: () => {
-        this.warehouses = this.warehouses.filter(w => w.id !== id);
+        this.data = this.data.filter(w => w.id !== id);
       },
       error: (error) => console.log(error),
     });
@@ -98,4 +101,26 @@ export class WerahousesComponent implements OnInit {
     this.editWarehouseId = null; // Reset the edit ID
   }
 
+
+  nextPage() {
+    // Go to the next page if it's not the last page
+    if (this.pagination.pageNumber < this.pagination.totalPages) {
+      this.pagination.pageNumber++;
+      this.loadWarehouses();
+    }
+  }
+
+  previousPage() {
+    // Go to the previous page if it's not the first page
+    if (this.pagination.pageNumber > 1) {
+      this.pagination.pageNumber--;
+      this.loadWarehouses();
+    }
+  }
+
+  setPage(page: number) {
+    // Set the current page to the specified page and update pagination
+    this.pagination.pageNumber = page;
+    this.loadWarehouses();
+  }
 }

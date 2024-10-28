@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { WarehouseSelectListItem } from '../core/models/warehouse';
+import { PaginationDTO } from '../core/models/paginationDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,8 @@ export class itemService {
     return this.http.get<item[]>(`${environment.apiUrl}/${this.url}/GetAll`);
   }
 
-  public getPaged(pageNumber: number, pageSize: number): Observable<item[]> {
-    return this.http.get<item[]>(`${environment.apiUrl}/${this.url}/GetPaged?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  public getPaged(pageNumber: number = 1, pageSize: number = 20) : Observable<PaginationDTO<item>>{
+    return this.http.get<PaginationDTO<item>>(`${environment.apiUrl}/${this.url}/GetPaged?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
   public WarehuseSelectList() : Observable<WarehouseSelectListItem[]>{

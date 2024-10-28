@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { PaginationDTO } from '../core/models/paginationDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +17,8 @@ export class userService {
     return this.http.get<user[]>(`${environment.apiUrl}/${this.url}/GetAll`);
   }
 
-  public getPaged(pageNumber: number, pageSize: number): Observable<user[]> {
-    return this.http.get<user[]>(`${environment.apiUrl}/${this.url}/GetPaged?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  public getPaged(pageNumber: number, pageSize: number): Observable<PaginationDTO<user>> {
+    return this.http.get<PaginationDTO<user>>(`${environment.apiUrl}/${this.url}/GetPaged?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
   public getById(user: user): Observable<user[]> {
