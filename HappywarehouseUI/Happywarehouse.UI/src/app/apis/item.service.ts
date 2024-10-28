@@ -18,6 +18,10 @@ export class itemService {
     return this.http.get<item[]>(`${environment.apiUrl}/${this.url}/GetAll`);
   }
 
+  public getPaged(pageNumber: number, pageSize: number): Observable<item[]> {
+    return this.http.get<item[]>(`${environment.apiUrl}/${this.url}/GetPaged?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+
   public WarehuseSelectList() : Observable<WarehouseSelectListItem[]>{
     return this.http.get<WarehouseSelectListItem[]>(`${environment.apiUrl}/${this.warehouseUrl}/SelectList`);
   }

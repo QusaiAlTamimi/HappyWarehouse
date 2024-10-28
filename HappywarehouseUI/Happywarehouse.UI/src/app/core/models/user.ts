@@ -26,3 +26,7 @@ export class LoginRequest {
     this.password = password;
   }
 }
+export class ChangePassword {
+  CurrentPassword= "";
+  NewPassword = "";
+}

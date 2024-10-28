@@ -15,6 +15,10 @@ export class WarehouseService {
     return this.http.get<warehouse[]>(`${environment.apiUrl}/${this.url}/GetAll`);
   }
 
+  public getPaged(pageNumber: number, pageSize: number): Observable<warehouse[]> {
+    return this.http.get<warehouse[]>(`${environment.apiUrl}/${this.url}/GetPaged?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
+
   public getById(warehouse : warehouse) : Observable<warehouse[]>{
     return this.http.get<warehouse[]>(`${environment.apiUrl}/${this.url}/GetById/${warehouse.id}`);
   }
